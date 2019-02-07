@@ -1,3 +1,10 @@
+$(document).ready( function() {
+    $.ajax({
+        method: "GET",
+        url: "/scrape"
+      })
+    })
+
 $(document).on("click", "#scrape", function() {
     $.ajax({
       method: "GET",
@@ -7,7 +14,7 @@ $(document).on("click", "#scrape", function() {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      $(".article-container").append("<div class = 'card' data-id='" + data[i]._id + "'><h3><a class='article-link' href='" + data[i].link + "'" + data[i].title + "'</h3><br />" + data[i].title + "</a><a class='btn btn-success save' id='" + data[i]._id + "'>Save Article</a></div>");
+      $(".article-container").append("<div class = 'card pl-5 py-3' data-id='" + data[i]._id + "'><img src='"+data[i].image+"' class = 'float-none' style='width:192px;height:123px;'><br /><h3><a class='article-link' href='" + data[i].link + "'" + data[i].title + "'</h3><br />" + data[i].title + "</a><br><br><p>"+data[i].summary+"</p><a class='btn btn-primary save float-none' id='" + data[i]._id + "'>Save Article</a></div>");
     }
   }));
   });
@@ -18,23 +25,26 @@ $(document).on("click", "#scrape", function() {
       method: "PUT",
       url: "/articles/" + thisId
     })
-    .then($.getJSON("/articles", function(data) {
-    // For each one
-    for (var i = 0; i < data.length; i++) {
-      // Display the apropos information on the page
-      $(".article-container").append("<div class = 'card' data-id='" + data[i]._id + "'><h3><a class='article-link' href='" + data[i].link + "'" + data[i].title + "'</h3><br />" + data[i].title + "</a><a class='btn btn-success save' id='save-btn'>Save Article</a></div>");
-    }
-  }));
-  });
+    .then($(this).hide()
+    .then($(this).parent().append("<a class='btn btn-success float-none'>Article Saved!</a></div>")))
+    })
+
   
   $(document).on("click", "#clear", function() {
     // Grab the articles as a json
     $.ajax({
       method: "DELETE",
       url: "/articles"
-    }).then($(".article-container").empty())
-    });
+    
+    }).then($(document).ready( function() {
+        $.ajax({
+            method: "GET",
+            url: "/scrape"
+          })
+        })).then($(".article-container").empty())
+    })
   
+    //////////////////////////////////////////////////////////////
   // Whenever someone clicks a p tag
   $(document).on("click", "p", function() {
     // Empty the notes from the note section
@@ -97,4 +107,3 @@ $(document).on("click", "#scrape", function() {
     $("#titleinput").val("");
     $("#bodyinput").val("");
   });
-  

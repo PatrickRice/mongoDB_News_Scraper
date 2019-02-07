@@ -23,7 +23,7 @@ module.exports = function(app) {
   // Load example page and pass in an example by id
   app.get("/articles/:id", function(req, res) {
     db.Article.findOne({ where: { id: req.params.id } }).then(function(dbExample) {
-      res.render("index", {
+      res.render("Note", {
         example: dbExample
       });
     });
@@ -32,6 +32,14 @@ module.exports = function(app) {
   app.get("/saved", function(req, res) {
     db.Article.find({ where: { isSaved: true } }).then(function(dbExample) {
       res.render("saved", {
+        example: dbExample
+      });
+    });
+  });
+
+  app.post("/articles/:id", function(req, res) {
+    db.Article.findOne({ where: { id: req.params.id } }).then(function(dbExample) {
+      res.render("Note", {
         example: dbExample
       });
     });
